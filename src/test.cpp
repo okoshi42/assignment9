@@ -163,6 +163,7 @@ TEST_CASE( "dijkstra() cityGraph2 Test", "[dijksta]" ) {
         CHECK (cityGraph2.edgeExists(last, current));
         last = current;
     }
+    cout << "end" << endl;
 }
 
 // YOUR CODE HERE
@@ -173,3 +174,57 @@ TEST_CASE( "dijkstra() cityGraph2 Test", "[dijksta]" ) {
 // reuse cityGraph or cityGraph2. Cite any sources.
 // Make sure that your assertions are fairly comprehensive.
 // Look at the prior two tests as examples.
+
+TEST_CASE("dijkstra() testGraph Test", "[dijksta]") {
+    WeightedGraph<string, int> testGraph = WeightedGraph<string, int>();
+    testGraph.addEdge("A", "B", 4, false);
+    testGraph.addEdge("A", "C", 6, false);
+    testGraph.addEdge("A", "D", 10, false);
+    testGraph.addEdge("B", "H", 5, false);
+    testGraph.addEdge("C", "E", 3, false);
+    testGraph.addEdge("D", "F", 5, false);
+    testGraph.addEdge("D", "G", 5, false);
+    testGraph.addEdge("D", "K", 7, false);
+    testGraph.addEdge("E", "F", 5, false);
+    testGraph.addEdge("F", "I", 8, false);
+    testGraph.addEdge("F", "J", 4, false);
+    testGraph.addEdge("G", "K", 4, false);
+    testGraph.addEdge("G", "M", 5, false);
+    testGraph.addEdge("H", "K", 4, false);
+    testGraph.addEdge("I", "L", 6, false);
+    testGraph.addEdge("J", "G", 4, false);
+    testGraph.addEdge("J", "I", 3, false);
+    testGraph.addEdge("J", "L", 5, false);
+    testGraph.addEdge("J", "M", 7, false);
+    testGraph.addEdge("K", "M", 2, false);
+    testGraph.addEdge("L", "N", 9, false);
+    testGraph.addEdge("M", "N", 8, false);
+    cout << "------testGraph------" << endl;
+    testGraph.debugPrint();
+    auto resultPair = testGraph.dijkstra("A");
+    auto parentResults = resultPair.first;
+    auto weightResults = resultPair.second;
+    // are the distances from A correct?
+    CHECK(weightResults["B"] == 4);
+    CHECK(weightResults["C"] == 6);
+    CHECK(weightResults["D"] == 10);
+    CHECK(weightResults["N"] == 23);
+    auto path = testGraph.pathMapToPath(parentResults, "N");
+    cout << "------testGraph path------" << endl;
+    printPath(path);
+    // Shortest path should be
+    // A -> D -> G -> M -> N
+    CHECK(path.size() == 6);
+    CHECK(path.front() == "A");
+    CHECK(path.back() == "N");
+    auto it = path.begin();
+    auto last = path.front();
+    for (unsigned long i = 1; i < path.size(); i++) {
+        it++;
+        auto current = *it;
+        CHECK(testGraph.edgeExists(last, current));
+        last = current;
+    }
+    cout << "end" << endl;
+}
+

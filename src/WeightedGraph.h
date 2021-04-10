@@ -140,7 +140,18 @@ namespace csi281 {
             // from class, from your book, and you are free to
             // use other pseudocode as long as you cite it. Please
             // do not look at other C++ solutions.
-            
+            while (!frontier.empty()) {
+                V currentNode = frontier.top().second;
+                    frontier.pop();
+                const list<pair<const V, W>>& wNeighborList = neighborsWithWeights(currentNode);
+                for (const auto& vPair : wNeighborList) {
+                    if (weights[vPair.first] == 0||weights[vPair.first] > weights[currentNode] + vPair.second) {
+                        weights[vPair.first] = weights[currentNode] + vPair.second;
+                        parents.emplace(vPair.first, currentNode);
+                        frontier.push(make_pair(weights[vPair.first], vPair.first));
+                    }
+                }
+            }
             return make_pair(parents, weights);
         }
         
